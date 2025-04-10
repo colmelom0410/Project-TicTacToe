@@ -18,10 +18,25 @@ const gameBoard = (function(){
     }
     return board;
 })();
+//Function for Draw Condition
+function checkDraw(board){
+    let draw = true;
+    for(let i=0; i<3; i++){
+        for(let j=0; j<3; j++){
+            if(board[i][j] === " "){
+                draw = false;
+                return draw;
+            }
+        }
+    }
+    return draw;
+}
 
 //Create function to check every winning conditions
 function checkWin(board){
     let win = false;
+
+    //Check Diagonally
     if(board[1][1] !== " "){
         if(board[0][0] === board[1][1] && board[1][1] == board[2][2]){
             win = true;
@@ -30,14 +45,12 @@ function checkWin(board){
             win = true;
         }
     }
+    //Check Horizontally and Vertically
     for(let i=0; i<3; i++){
         if(board[i][0] !== " " && board[i][0] === board[i][1] && board[i][1] == board[i][2]){
             win = true;
         }
         else if(board[0][i] !== " " && board[0][i] === board[1][i] && board[1][i] == board[2][i]){
-            win = true;
-        }
-        else if(board[0][0] === board[1][1] && board[1][1] == board[2][2]){
             win = true;
         }
         return win;
@@ -70,13 +83,18 @@ function gameControl(){
         if(board[row][col]=== " "){
             board[row][col] = activePlayer.token;
             console.log(board);
-            if(checkWin(board)){
-                console.log(`${activePlayer.name} WON!`);
+            if(checkDraw(board)){
+                console.log("DRAW!!");
             }
             else{
-                activePlayer = switchTurn(activePlayer, players);
-                console.log(`${activePlayer.name}'s turn`)
-            }  
+                if(checkWin(board)){
+                    console.log(`${activePlayer.name} WON!`);
+                }
+                else{
+                    activePlayer = switchTurn(activePlayer, players);
+                    console.log(`${activePlayer.name}'s turn`)
+                }  
+            }
         }
         else{
             console.log("Cell is already occupied");
