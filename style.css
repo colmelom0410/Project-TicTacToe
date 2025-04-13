@@ -66,6 +66,38 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 8em;
-    font-weight: bold;
   }
+
+  @keyframes drawLine {
+    from {
+      stroke-dashoffset: 141.4; /* roughly length of diagonal line in 100x100 square */
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes drawCircle {
+    from {
+      stroke-dashoffset: 282.74; /* circumference of r=40 circle (2 * π * 40) */
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .animated-line {
+    stroke-dasharray: 141.4;
+    stroke-dashoffset: 141.4;
+    animation: drawLine 0.2s ease-out forwards;
+  }
+  .animated-line2 {
+    animation-delay: 0.2s;
+  }
+
+  .animated-circle {
+    stroke-dasharray: 282.74;
+    stroke-dashoffset: 282.74;
+    animation: drawCircle 0.4s ease-out forwards;
+  }
+

@@ -1,6 +1,7 @@
 //Game Board Object
 const gameBoard = (function(){
     let board = [];
+    //create new Board if there is no existing board
     const createNewBoard = () => {
         const row = 3;
         const column = 3;
@@ -101,17 +102,74 @@ const controlGame = {
 //Object for displaying the board
 const display = {
     tiles: document.querySelectorAll(".tiles"),
+    oldBoard: new Array(9).fill(" "),
     boardDisplay: function(board){
         let newBoard = [];
         for(let i = 0; i<3; i++){
             for(let j = 0; j<3; j++){
-                newBoard += board[i][j]
+                newBoard.push(board[i][j])
             }
+    
         }
         this.tiles.forEach((tile, index) => {
-            tile.textContent = newBoard[index];
+            if(newBoard[index] === "X" && this.oldBoard[index] === " "){
+                const svgNS = "http://www.w3.org/2000/svg";
+                const svg = document.createElementNS(svgNS, "svg"); 
+                svg.setAttribute('height', '100');
+                svg.setAttribute('width','100');
+                const line1 = document.createElementNS(svgNS, "line"); 
+                line1.classList.add("animated-line");
+                line1.setAttribute('x1','0');
+                line1.setAttribute('y1','0');
+                line1.setAttribute('x2','100');
+                line1.setAttribute('y2','100');
+                line1.setAttribute('stroke', 'black');
+                line1.setAttribute('stroke-width','5');
+                const line2 = document.createElementNS(svgNS, "line"); 
+                line2.classList.add("animated-line");
+                line2.classList.add("animated-line2");
+                line2.setAttribute('x1','100');
+                line2.setAttribute('y1','0');
+                line2.setAttribute('x2','0');
+                line2.setAttribute('y2','100');
+                line2.setAttribute('stroke', 'black');
+                line2.setAttribute('stroke-width','5');
+                svg.appendChild(line1);
+                svg.appendChild(line2);
+                tile.appendChild(svg);
+            }
+            else if(newBoard[index] === "O" && this.oldBoard[index] === " "){
+                const svgNS = "http://www.w3.org/2000/svg";
+                const svg = document.createElementNS(svgNS, "svg"); 
+                svg.setAttribute('height', '100');
+                svg.setAttribute('width','100');
+                const circle = document.createElementNS(svgNS, "circle"); 
+                circle.classList.add("animated-circle")
+                circle.setAttribute('r','45');
+                circle.setAttribute('cx','50');
+                circle.setAttribute('cy','50');
+                circle.setAttribute('fill','none');
+                circle.setAttribute('stroke', 'black');
+                circle.setAttribute('stroke-width','5');
+                svg.appendChild(circle);
+                tile.appendChild(svg);
+            }
         })
+        console.log(this.oldBoard);
+        console.log(newBoard);
+        this.oldBoard = newBoard;
     }
 }
 
 const game = controlGame;
+
+const buttonTile = document.querySelectorAll(".tiles")
+
+buttonTile.forEach((tile, index) => {
+    tile.addEventListener("click", () => {
+      const row = Math.floor(index / 3);
+      const col = index % 3;
+      game.play(row, col);
+    });
+  });
+  
