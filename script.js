@@ -1,5 +1,4 @@
-
-//Create a single instance of the game board
+//Game Board Object
 const gameBoard = (function(){
     let board = [];
     const createNewBoard = () => {
@@ -18,92 +17,101 @@ const gameBoard = (function(){
     }
     return board;
 })();
-//Function for Draw Condition
-function checkDraw(board){
-    let draw = true;
-    for(let i=0; i<3; i++){
-        for(let j=0; j<3; j++){
-            if(board[i][j] === " "){
-                draw = false;
-                return draw;
-            }
-        }
+
+//Player Object
+const player = {
+    playerX: {
+        name: "Player X",
+        token: "X",
+    },
+    playerO: {
+        name: "Player O",
+        token: "O",
+    },
+    switchPlayer: function(activePlayer){
+        return activePlayer === this.playerX ? this.playerO : this.playerX ;
     }
-    return draw;
 }
-
-//Create function to check every winning conditions
-function checkWin(board){
-    let win = false;
-
-    //Check Diagonally
-    if(board[1][1] !== " "){
-        if(board[0][0] === board[1][1] && board[1][1] == board[2][2]){
-            win = true;
-        }
-        else if(board[0][2] === board[1][1] && board[1][1] == board[2][0]){
-            win = true;
-        }
-    }
-    //Check Horizontally and Vertically
-    for(let i=0; i<3; i++){
-        if(board[i][0] !== " " && board[i][0] === board[i][1] && board[i][1] == board[i][2]){
-            win = true;
-        }
-        else if(board[0][i] !== " " && board[0][i] === board[1][i] && board[1][i] == board[2][i]){
-            win = true;
-        }
-        return win;
-    }
-
-    return win;
-}
-
-
-console.log(gameBoard);
-
-function gameControl(){
-    let board = gameBoard;
-    const players = [
-        {
-            name:"Player X",
-            token:"X"
-        },
-        {
-            name:"Player O",
-            token:"O"
-        }
-    ]
-    let activePlayer = players[0];
-    console.log(`${activePlayer.name}'s turn`)
-    const switchTurn = (activePlayer, players) => {
-        return activePlayer === players[0] ? players[1] : players[0];
-    }
-    const play = (row, col) =>{
-        if(board[row][col]=== " "){
-            board[row][col] = activePlayer.token;
-            console.log(board);
-            if(checkDraw(board)){
+//Object for Controlling the Game
+const controlGame = {
+    board: gameBoard,
+    activePlayer: player.playerX,
+    play: function(row, col){
+        if(this.board[row][col]=== " "){
+            this.board[row][col] = this.activePlayer.token;
+            console.log(this.board);
+            if(this.checkDraw(this.board)){
                 console.log("DRAW!!");
             }
             else{
-                if(checkWin(board)){
-                    console.log(`${activePlayer.name} WON!`);
+                if(this.checkWin(this.board)){
+                    console.log(`${this.activePlayer.name} WON!`);
                 }
                 else{
-                    activePlayer = switchTurn(activePlayer, players);
-                    console.log(`${activePlayer.name}'s turn`)
+                    this.activePlayer = player.switchPlayer(this.activePlayer);
+                    console.log(`${this.activePlayer.name}'s turn`)
                 }  
             }
         }
         else{
             console.log("Cell is already occupied");
-            console.log(board);
+            console.log(this.board);
+        } 
+        display.boardDisplay(gameBoard);
+    },
+    checkWin: function(){
+        let win = false;
+
+        //Check Diagonally
+        if(this.board[1][1] !== " "){
+            if(this.board[0][0] === this.board[1][1] && this.board[1][1] == this.board[2][2]){
+                win = true;
+            }
+            else if(this.board[0][2] === this.board[1][1] && this.board[1][1] == this.board[2][0]){
+                win = true;
+            }
         }
-        
+        //Check Horizontally and Vertically
+        for(let i=0; i<3; i++){
+            if(this.board[i][0] !== " " && this.board[i][0] === this.board[i][1] && this.board[i][1] === this.board[i][2]){
+                win = true;
+            }
+            else if(this.board[0][i] !== " " && this.board[0][i] === this.board[1][i] && this.board[1][i] === this.board[2][i]){
+                win = true;
+            }
+        }
+
+        return win;
+    },
+    checkDraw: function(){
+        let draw = true;
+        for(let i=0; i<3; i++){
+            for(let j=0; j<3; j++){
+                if(this.board[i][j] === " "){
+                    draw = false;
+                    return draw;
+                }
+            }
+        }
+        return draw;
     }
-    return {play};
+
 }
 
-const game = gameControl();
+//Object for displaying the board
+const display = {
+    tiles: document.querySelectorAll(".tiles"),
+    boardDisplay: function(board){
+        let newBoard = [];
+        for(let i = 0; i<3; i++){
+            for(let j = 0; j<3; j++){
+                newBoard += board[i][j]
+            }
+        }
+        this.tiles.forEach((tile, index) => {
+            tile.textContent = newBoard[index];
+        })
+    }
+}
 
+const game = controlGame;
