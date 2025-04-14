@@ -43,10 +43,12 @@ const controlGame = {
             console.log(this.board);
             if(this.checkDraw(this.board)){
                 console.log("DRAW!!");
+                this.showDialog();
             }
             else{
                 if(this.checkWin(this.board)){
                     console.log(`${this.activePlayer.name} WON!`);
+                    this.showDialog();
                 }
                 else{
                     this.activePlayer = player.switchPlayer(this.activePlayer);
@@ -58,7 +60,7 @@ const controlGame = {
             console.log("Cell is already occupied");
             console.log(this.board);
         } 
-        display.boardDisplay(gameBoard);
+        display.boardDisplay(this.board);
     },
     checkWin: function(){
         let win = false;
@@ -95,6 +97,34 @@ const controlGame = {
             }
         }
         return draw;
+    },
+    resetGame: function(){
+        display.resetDisplay();
+        for(let i=0; i<3; i++){
+            this.board.pop();
+        }
+
+        for(let i = 0; i < 3; i++){
+            this.board[i]=[];
+            for(let j = 0; j < 3; j++){
+                this.board[i].push(" ");
+            }
+        }   
+        console.log(this.board); 
+        this.dialog.close();   
+    },
+    dialog: document.querySelector("dialog"),
+    showDialog: function(){
+        const winner = document.querySelector("#winner");
+        const restart = document.querySelector("#restart");
+        if(this.checkDraw()){
+            winner.textContent = "DRAW!";
+        }
+        else{
+            winner.textContent = `${this.activePlayer.name} WON!`;
+        }
+        this.dialog.showModal();
+        restart.addEventListener('click', ()=>{this.resetGame()});
     }
 
 }
@@ -158,6 +188,19 @@ const display = {
         console.log(this.oldBoard);
         console.log(newBoard);
         this.oldBoard = newBoard;
+    },
+    resetDisplay: function(){
+        for(let i=this.oldBoard.length; i>0; i--){
+            this.oldBoard.pop();
+        }
+        for(let i=0; i<9; i++){
+            this.oldBoard.push(" ");
+        }
+        this.tiles.forEach(tile => {
+            if(tile.children.length > 0){
+                tile.removeChild(tile.firstChild)
+            }
+        });
     }
 }
 

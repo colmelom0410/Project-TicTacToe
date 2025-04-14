@@ -49,6 +49,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    position: relative;
 }
   
   .container{
@@ -101,3 +102,40 @@
     animation: drawCircle 0.4s ease-out forwards;
   }
 
+
+dialog{
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  margin: 0;
+  top: 25%;
+}
+
+#winner{
+ color: rgb(255, 255, 255, 0.7);
+ background-color: rgb(0, 0, 0, 0.7);
+ width: 100%;
+ text-align: center;
+ font-weight: bold;
+ font-size: 5em;
+}
+#dialogBtn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}
+#restart{
+  padding: 10px 40px;
+  color: black;
+  background-color: rgb(202, 200, 195);
+  border: none;
+  border-radius: 5px;
+}
+#restart:active{
+  background-color: rgb(117, 117, 117);
+}
+dialog::backdrop{
+  background-color: rgb(0, 0, 0, 0.4);
+}
