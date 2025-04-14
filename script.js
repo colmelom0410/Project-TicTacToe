@@ -41,50 +41,49 @@ const controlGame = {
         if(this.board[row][col]=== " "){
             this.board[row][col] = this.activePlayer.token;
             console.log(this.board);
-            if(this.checkDraw(this.board)){
+            display.boardDisplay(this.board);
+            const winCombo = this.checkWin();
+            if(winCombo){
+                console.log(`${this.activePlayer.name} WON!`);
+                this.highlightWin(winCombo);
+                this.showDialog();
+            }
+            else if(this.checkDraw(this.board)){
                 console.log("DRAW!!");
                 this.showDialog();
             }
             else{
-                if(this.checkWin(this.board)){
-                    console.log(`${this.activePlayer.name} WON!`);
-                    this.showDialog();
-                }
-                else{
-                    this.activePlayer = player.switchPlayer(this.activePlayer);
-                    console.log(`${this.activePlayer.name}'s turn`)
-                }  
-            }
+                this.activePlayer = player.switchPlayer(this.activePlayer);
+                console.log(`${this.activePlayer.name}'s turn`)
+            }  
         }
         else{
             console.log("Cell is already occupied");
             console.log(this.board);
-        } 
-        display.boardDisplay(this.board);
+        }   
     },
     checkWin: function(){
-        let win = false;
-
-        //Check Diagonally
+        // Check diagonals
         if(this.board[1][1] !== " "){
-            if(this.board[0][0] === this.board[1][1] && this.board[1][1] == this.board[2][2]){
-                win = true;
+            if(this.board[0][0] === this.board[1][1] && this.board[1][1] === this.board[2][2]){
+                return [[0,0], [1,1], [2,2]];
             }
-            else if(this.board[0][2] === this.board[1][1] && this.board[1][1] == this.board[2][0]){
-                win = true;
+            else if(this.board[0][2] === this.board[1][1] && this.board[1][1] === this.board[2][0]){
+                return [[0,2], [1,1], [2,0]];
             }
         }
-        //Check Horizontally and Vertically
-        for(let i=0; i<3; i++){
+    
+        // Check rows and columns
+        for(let i = 0; i < 3; i++){
             if(this.board[i][0] !== " " && this.board[i][0] === this.board[i][1] && this.board[i][1] === this.board[i][2]){
-                win = true;
+                return [[i,0], [i,1], [i,2]];
             }
-            else if(this.board[0][i] !== " " && this.board[0][i] === this.board[1][i] && this.board[1][i] === this.board[2][i]){
-                win = true;
+            if(this.board[0][i] !== " " && this.board[0][i] === this.board[1][i] && this.board[1][i] === this.board[2][i]){
+                return [[0,i], [1,i], [2,i]];
             }
         }
-
-        return win;
+    
+        return null;
     },
     checkDraw: function(){
         let draw = true;
@@ -117,14 +116,30 @@ const controlGame = {
     showDialog: function(){
         const winner = document.querySelector("#winner");
         const restart = document.querySelector("#restart");
-        if(this.checkDraw()){
-            winner.textContent = "DRAW!";
+        if(this.checkWin()){
+            winner.textContent = `${this.activePlayer.name} WON!`;
         }
         else{
-            winner.textContent = `${this.activePlayer.name} WON!`;
+            winner.textContent = "DRAW!";
         }
         this.dialog.showModal();
         restart.addEventListener('click', ()=>{this.resetGame()});
+    },
+    //highlight winning combinations
+    highlightWin: function(combo){
+        combo.forEach(([row, col]) => {
+            const index = row * 3 + col;
+            const tile = display.tiles[index];
+            
+            // Check if the tile has an SVG (i.e., it contains an X or O)
+            const svg = tile.querySelector("svg");
+            if (svg) {
+                const shapes = svg.querySelectorAll("line, circle");
+                shapes.forEach(shape => {
+                    shape.setAttribute("stroke", "red"); // Set the color to red
+                });
+            }
+        });
     }
 
 }
@@ -197,6 +212,7 @@ const display = {
             this.oldBoard.push(" ");
         }
         this.tiles.forEach(tile => {
+            tile.style.backgroundColor = "";
             if(tile.children.length > 0){
                 tile.removeChild(tile.firstChild)
             }
