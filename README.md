@@ -1,1 +1,6 @@
 # Project-TicTacToe
+
+
+ODIN PROJECT: TIC-TAC-TOE
+
+Status: COMPLETED
