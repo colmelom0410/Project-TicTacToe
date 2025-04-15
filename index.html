@@ -7,12 +7,28 @@
     <title>Project:Tic-Tac-Toe</title>
 </head>
 <body>
-  <dialog>
+  <dialog id="startDialog">
+    <div>
+      <div>
+        <label for="playerX">Player X:</label>
+        <input type="text" name="playerX" id="playerX" placeholder="Player X name">
+      </div>
+      <div>
+        <label for="playerO">Player O:</label>
+        <input type="text" name="playerO" id="playerO" placeholder="Player O name">
+      </div>
+    </div>
+    <div id="startBtn">
+      <button>Start</button>
+    </div>
+  </dialog>
+  <dialog id="resultDialog">
     <div id="winner"></div>
     <div id="dialogBtn">
       <button id="restart">Restart</button>
     </div>
   </dialog>
+  <div id="currentPlayer">X</div>
   <div class="container">
     <div class="tiles" id="tile0" role="button"></div>
     <div class="tiles" id="tile1" role="button"></div>
@@ -23,6 +39,18 @@
     <div class="tiles" id="tile6" role="button"></div>
     <div class="tiles" id="tile7" role="button"></div>
     <div class="tiles" id="tile8" role="button"></div>
+  </div>
+  <div id="scoreBoard">
+    <p>Score Board<p>
+    <div id="scoreGrid">
+      <div id="scoreXname">Player X</div>
+      <div id="scoreX">0</div>
+      <div id="scoreOname">Player O</div>
+      <div id="scoreO">0</div>
+    </div>
+    <div id="resetScore">
+      <button>Reset score</button>
+    </div>
   </div>
 
   <script src="script.js"></script>

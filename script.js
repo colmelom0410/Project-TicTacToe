@@ -22,21 +22,44 @@ const gameBoard = (function(){
 //Player Object
 const player = {
     playerX: {
-        name: "Player X",
+        name: "X",
         token: "X",
     },
     playerO: {
-        name: "Player O",
+        name: "O",
         token: "O",
     },
+    scoreOname: document.querySelector("#scoreOname"),
+    scoreXname: document.querySelector("#scoreXname"),
     switchPlayer: function(activePlayer){
         return activePlayer === this.playerX ? this.playerO : this.playerX ;
+    },
+    enterName: function (){
+        const startDialog = document.querySelector("#startDialog");
+        const playerXinput = startDialog.querySelector("#playerX");
+        const playerOinput = startDialog.querySelector("#playerO");
+        const startBtn = startDialog.querySelector("#startBtn > button");
+        startDialog.showModal();
+        startBtn.addEventListener('click',()=>{
+            this.playerX.name = !playerXinput.value ? this.playerX.name : playerXinput.value; 
+            this.playerO.name = !playerOinput.value ? this.playerO.name : playerOinput.value;
+            scoreXname.textContent = this.playerX.name;
+            scoreOname.textContent = this.playerO.name;
+            controlGame.displayPlayerTurn.textContent = controlGame.activePlayer.name;
+            startDialog.close(); 
+        })
     }
 }
 //Object for Controlling the Game
 const controlGame = {
     board: gameBoard,
     activePlayer: player.playerX,
+    displayPlayerTurn: document.querySelector("#currentPlayer"),
+    playerXscore: 0,
+    playerOscore: 0,
+    scoreO: document.querySelector("#scoreO"),
+    scoreX: document.querySelector("#scoreX"),
+    resetScoreBtn: document.querySelector("#resetScore > button"),
     play: function(row, col){
         if(this.board[row][col]=== " "){
             this.board[row][col] = this.activePlayer.token;
@@ -44,7 +67,8 @@ const controlGame = {
             display.boardDisplay(this.board);
             const winCombo = this.checkWin();
             if(winCombo){
-                console.log(`${this.activePlayer.name} WON!`);
+                console.log(`Player ${this.activePlayer.name} WON!`);
+                this.score();
                 this.highlightWin(winCombo);
                 this.showDialog();
             }
@@ -60,7 +84,8 @@ const controlGame = {
         else{
             console.log("Cell is already occupied");
             console.log(this.board);
-        }   
+        }
+        this.displayPlayerTurn.textContent = this.activePlayer.name;  
     },
     checkWin: function(){
         // Check diagonals
@@ -110,19 +135,19 @@ const controlGame = {
             }
         }   
         console.log(this.board); 
-        this.dialog.close();   
+        this.resultDialog.close();   
     },
-    dialog: document.querySelector("dialog"),
+    resultDialog: document.querySelector("#resultDialog"),
     showDialog: function(){
         const winner = document.querySelector("#winner");
         const restart = document.querySelector("#restart");
         if(this.checkWin()){
-            winner.textContent = `${this.activePlayer.name} WON!`;
+            winner.textContent = `Player ${this.activePlayer.name} WON!`;
         }
         else{
             winner.textContent = "DRAW!";
         }
-        this.dialog.showModal();
+        this.resultDialog.showModal();
         restart.addEventListener('click', ()=>{this.resetGame()});
     },
     //highlight winning combinations
@@ -140,8 +165,27 @@ const controlGame = {
                 });
             }
         });
+    },
+    score: function(){
+        if(this.activePlayer.token === "X"){
+            this.playerXscore += 1;
+            this.scoreX.textContent = this.playerXscore;
+        }
+        else if(this.activePlayer.token === "O"){
+            this.playerOscore += 1;
+            this.scoreO.textContent = this.playerOscore;
+        }
+        this.resetScoreBtn.addEventListener('click', () =>{
+            this.playerOscore = 0;
+            this.playerXscore = 0;
+            this.scoreX.textContent = this.playerXscore;
+            this.scoreO.textContent = this.playerOscore;
+        })
+    },
+    resetScore: function(){
+        
+        
     }
-
 }
 
 //Object for displaying the board
@@ -220,6 +264,7 @@ const display = {
     }
 }
 
+player.enterName();
 const game = controlGame;
 
 const buttonTile = document.querySelectorAll(".tiles")

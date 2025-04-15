@@ -103,7 +103,7 @@
   }
 
 
-dialog{ 
+#resultDialog{ 
   position: absolute;
   background-color: transparent;
   border: none;
@@ -113,7 +113,6 @@ dialog{
   left: 50%;
   transform: translate(-50%, -50%);
 } 
-/* Why the dialog not occupying the whole width */
 
 #winner{
  color: rgb(255, 255, 255, 0.7);
@@ -129,16 +128,78 @@ dialog{
   align-items: center;
   margin: 20px;
 }
-#restart{
+#restart, #startBtn > button{
   padding: 10px 40px;
   color: black;
   background-color: rgb(202, 200, 195);
   border: none;
   border-radius: 5px;
 }
-#restart:active{
+#restart:active, #startBtn > button:active{
   background-color: rgb(117, 117, 117);
 }
 dialog::backdrop{
   background-color: rgb(0, 0, 0, 0.4);
+}
+
+#startDialog{
+  position: absolute;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#startDialog > div{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#startBtn{
+  align-items: center;
+  margin-top: 1em;
+}
+
+#currentPlayer{
+  position: absolute;
+  left: 5%;
+  top: 15%;
+  font-size: 2em;
+}
+#currentPlayer::after{
+  content: "'s turn";
+}
+
+#currentPlayer::before{
+  content: "Player ";
+}
+
+#scoreBoard{
+  position: absolute;
+  top: 15%;
+  right: 4%;
+  font-size: 1.5em;
+}
+#scoreBoard > p{
+  text-align: center;
+  font-size: 2em;
+}
+#scoreGrid{
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  justify-items: center;
+}
+#scoreGrid > div{
+  background-color: white;
+}
+
+#resetScore{
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
 }
